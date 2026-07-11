@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, UserPlus, Edit2, Lock as LockIcon, RefreshCw } from 'lucide-react';
-import { UserService } from '../api/services';
+import { SystemService, UserService } from '../api/services';
 
 type ApiUser = {
   id: string;
@@ -24,7 +24,7 @@ export default function UserList() {
   const loadUsers = async () => {
     setLoading(true);
     try {
-      const data = await UserService.getUserList();
+      const data = await SystemService.getUserList();
       setUsers(data);
     } catch (err) {
       console.error("Failed to fetch users:", err);
@@ -39,7 +39,6 @@ export default function UserList() {
 
   const confirmDelete = async () => {
     if (userToDelete) {
-      // await UserService.deleteUser(userToDelete.id);
       setUsers(users.filter(u => u.id !== userToDelete.id));
       setUserToDelete(null);
     }

@@ -21,6 +21,7 @@ import {
   ChangePasswordService,
   InstalledAppsService,
   UserService,
+  SystemService,
 } from "../api/services";
 
 // 1. Define all possible modal types here to keep Typescript happy as you grow
@@ -110,7 +111,7 @@ export default function EditUser() {
       try {
         const [appsResponse, userData] = await Promise.all([
           InstalledAppsService.getInstalledApps(),
-          UserService.getUserById(id),
+          SystemService.getUserById(id),
         ]);
 
         setAvailableApps(appsResponse);
@@ -168,7 +169,7 @@ export default function EditUser() {
           break;
 
         case "delete":
-          await UserService.deleteUser(id!);
+          await SystemService.deleteUser(id!);
           alert("User permanently deleted.");
           navigate("/users");
           break;
@@ -184,14 +185,14 @@ export default function EditUser() {
             is_active: active, 
             permissions: permissions,
           };
-          await UserService.updateUser(user.id, updatePayload);
+          await SystemService.updateUser(user.id, updatePayload);
           alert("Settings updated successfully");
           setModalType(null);
           break;
 
         case "unlock":
           try {
-            await UserService.unlockUser(user.id);
+            await SystemService.unlockUser(user.id);
             alert("Account unlocked successfully.");
 
             // Optional: Update the local user state to reflect the change

@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, LogOut, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, Users, LogOut, Sun, Moon, UserCircle } from 'lucide-react';
 
 interface LayoutProps {
   isDarkMode: boolean;
@@ -46,6 +46,12 @@ export default function DashboardLayout({ isDarkMode, toggleTheme }: LayoutProps
             <Users size={18} />
             <span>User List</span>
           </NavLink>
+
+          <NavLink to="/me" className={navLinkClass}>
+            <UserCircle size={18} />
+            <span>Profile</span>
+          </NavLink>
+
         </nav>
 
         {/* Actions (Theme Toggle & Logout) */}
