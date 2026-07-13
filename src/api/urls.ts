@@ -11,7 +11,7 @@ export const ENDPOINTS = {
   users: {
     list: '/system/users/',
     create: '/system/users',
-    register : '/system/users/register',
+    register : '/system/register',
     details: (id: string | number) => `/system/users/${id}`,
     permissions: (id: string | number) => `/system/users/${id}/permissions`,
     delete: (id: string | number) => `/system/users/${id}`,

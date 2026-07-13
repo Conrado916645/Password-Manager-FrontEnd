@@ -15,8 +15,27 @@ export const AuthService = {
       }
     });
     
-    localStorage.setItem('access_token', response.data.access_token);
-    localStorage.setItem('refresh_token', response.data.refresh_token);
+    // 3. ONLY store tokens if standard login was successful (no MFA required)
+    if (response.data.access_token) {
+      localStorage.setItem('access_token', response.data.access_token);
+      localStorage.setItem('refresh_token', response.data.refresh_token);
+    }
+    
+    // Return the response (which might contain the mfa_token instead)
+    return response.data;
+  },
+
+  // 4. NEW: Verify MFA during the Login flow
+  verifyMfa: async (payload: { mfa_token: string; code: string }) => {
+    // Note: Ensure this endpoint matches your FastAPI auth routes
+    const response = await apiClient.post('/auth/mfa/verify', payload);
+    
+    // If successful, store the actual access tokens
+    if (response.data.access_token) {
+      localStorage.setItem('access_token', response.data.access_token);
+      localStorage.setItem('refresh_token', response.data.refresh_token);
+    }
+    
     return response.data;
   }
 };
@@ -50,54 +69,62 @@ export const SystemService = {
     const response = await apiClient.get('/api/v1/system/health');
     return response.data;
   },
-    getUserById: async (userId: string) => {
+  getUserById: async (userId: string) => {
     const response = await apiClient.get(`${ENDPOINTS.users.list}${userId}`);
     return response.data;
   },
-    deleteUser: async (userId: string | number) => {
+  deleteUser: async (userId: string | number) => {
     const response = await apiClient.delete(`/users/${userId}`);
     return response.data;
   },
-    updateUser: async (userId: string | number, payload: { 
+  updateUser: async (userId: string | number, payload: { 
     is_active?: boolean, 
     permissions?: Record<string, string[]> 
   }) => {
     const response = await apiClient.patch(`/system/users/${userId}`, payload);
     return response.data;
   },
-    unlockUser: async (userId: string | number) => {
+  unlockUser: async (userId: string | number) => {
     const response = await apiClient.post(`/system/users/${userId}/unlock`);
     return response.data;
   }
 };
 
 export const UserService = {
-getMe: async () => {
+  getMe: async () => {
     const response = await apiClient.get(ENDPOINTS.users.me);
     return response.data;
   },
+
+  // NEW: MFA Setup actions for the Profile page
+  setupMfa: async () => {
+    const response = await apiClient.post('/users/me/mfa/setup');
+    return response.data;
+  },
+  
+  verifyMfaSetup: async (code: string) => {
+    const response = await apiClient.post('/users/me/mfa/verify', { code });
+    return response.data;
+  }
 };
 
 export const UserRegistrationService = {
-
   registerUser: async (userData: { 
     username: string; 
     password: string; 
     confirm_password: string; 
     permissions: Record<string, any> 
   }) => {
-  
     const response = await apiClient.post(ENDPOINTS.users.register, userData);
     return response.data;
   }
 };
 
-
 export const InstalledAppsService = {
   getInstalledApps: async () => {
     try {
       const response = await apiClient.get(ENDPOINTS.system.installedApps);
-      return response.data.installed_apps; // Returns the dictionary of apps and actions
+      return response.data.installed_apps; 
     } catch (error: any) {
       console.error("System Registry Error:", error.response?.data || error.message);
       throw error;
@@ -113,15 +140,10 @@ export const GenerateApiKeyService = {
 };
 
 export const ChangePasswordService = {
-
   resetPassword: async (id: string | number, newPassword: string) => {
-
     const response = await apiClient.post(`/users/${id}/reset-password`, {
       new_password: newPassword 
     });
-    
     return response.data;
   }
 };
-
-
