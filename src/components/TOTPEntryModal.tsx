@@ -30,14 +30,11 @@ export default function TOTPEntryModal({
     setError('');
 
     try {
-      // We pass the code to the parent component to handle the actual API call.
-      // This makes the modal reusable for both Login and Sensitive Actions.
       await onSuccess(code);
     } catch (err: any) {
-      // The parent can throw an error to be caught and displayed here
       setError(err.response?.data?.detail || err.message || "Invalid code. Please try again.");
-      setCode(''); // Clear the input on failure
-      inputRef.current?.focus(); // Re-focus
+      setCode(''); 
+      inputRef.current?.focus(); 
     } finally {
       setIsVerifying(false);
     }
@@ -46,8 +43,6 @@ export default function TOTPEntryModal({
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
       <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl w-full max-w-sm shadow-2xl border dark:border-slate-800 flex flex-col relative">
-        
-        {/* Close Button */}
         <button 
           onClick={onClose} 
           className="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"

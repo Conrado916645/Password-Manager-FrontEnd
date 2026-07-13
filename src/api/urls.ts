@@ -7,6 +7,7 @@ export const ENDPOINTS = {
     login: '/auth/login',
     register: '/auth/register',
     refreshToken: '/auth/refresh',
+    mfaVerify: '/auth/login/mfa-verify'
   },
   users: {
     list: '/system/users/',
@@ -18,8 +19,10 @@ export const ENDPOINTS = {
     lock: (id: string | number) => `/system/users/${id}/lock`,
     unlock: (id: string | number) => `/system/users/${id}/unlock`,
     generateAPIKey: (id: string | number) => `/system/users/${id}/generate-api-key`,
-
     me: '/users/me',
+    mfa: '/mfa/setup/totp',
+    mfaVerify: '/mfa/verify/totp',
+    mfaDisable: '/mfa/disable'
   },
   apps: {
     config: '/apps/config',

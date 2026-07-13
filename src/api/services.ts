@@ -3,41 +3,34 @@ import { ENDPOINTS } from './urls';
 
 export const AuthService = {
   login: async (credentials: any) => {
-    // 1. Convert JSON to URL Encoded Form Data
     const formData = new URLSearchParams();
     formData.append('username', credentials.username);
     formData.append('password', credentials.password);
 
-    // 2. Override the Content-Type header just for this request
     const response = await apiClient.post(ENDPOINTS.auth.login, formData, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     });
     
-    // 3. ONLY store tokens if standard login was successful (no MFA required)
     if (response.data.access_token) {
       localStorage.setItem('access_token', response.data.access_token);
       localStorage.setItem('refresh_token', response.data.refresh_token);
     }
     
-    // Return the response (which might contain the mfa_token instead)
     return response.data;
   },
-
-  // 4. NEW: Verify MFA during the Login flow
-  verifyMfa: async (payload: { mfa_token: string; code: string }) => {
-    // Note: Ensure this endpoint matches your FastAPI auth routes
-    const response = await apiClient.post('/auth/mfa/verify', payload);
-    
-    // If successful, store the actual access tokens
-    if (response.data.access_token) {
-      localStorage.setItem('access_token', response.data.access_token);
-      localStorage.setItem('refresh_token', response.data.refresh_token);
-    }
-    
-    return response.data;
+  // Inside your AuthService
+verifyMfa: async (payload: { mfa_token: string; code: string }) => {
+  const response = await apiClient.post(ENDPOINTS.auth.mfaVerify, payload);
+  console.log(payload)
+  if (response.data.access_token) {
+    localStorage.setItem('access_token', response.data.access_token);
+    localStorage.setItem('refresh_token', response.data.refresh_token);
   }
+  
+  return response.data;
+}
 };
 
 export const SystemService = {
@@ -91,21 +84,39 @@ export const SystemService = {
 };
 
 export const UserService = {
+  getKey2FA: async () => {
+    const reponse = await apiClient.get(ENDPOINTS.users.mfa);
+    return reponse.data
+  },
   getMe: async () => {
     const response = await apiClient.get(ENDPOINTS.users.me);
     return response.data;
   },
 
-  // NEW: MFA Setup actions for the Profile page
   setupMfa: async () => {
     const response = await apiClient.post('/users/me/mfa/setup');
     return response.data;
   },
   
   verifyMfaSetup: async (code: string) => {
-    const response = await apiClient.post('/users/me/mfa/verify', { code });
+    const response = await apiClient.post(ENDPOINTS.users.mfaVerify, { code });
     return response.data;
-  }
+  },
+
+  disableMFA: async(password: string ) =>{
+        const response = await apiClient.post(ENDPOINTS.users.mfaDisable, { password });
+    return response.data;
+  },
+
+  updateProfile: async (payload: {
+    email: string;
+    full_name: string;
+    date_of_birth: string;
+    phone_number: string;
+  }) => {
+    const response = await apiClient.patch(ENDPOINTS.users.me, payload);
+    return response.data;
+  },
 };
 
 export const UserRegistrationService = {
