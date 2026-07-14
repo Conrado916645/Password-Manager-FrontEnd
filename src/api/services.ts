@@ -67,7 +67,7 @@ export const SystemService = {
     return response.data;
   },
   deleteUser: async (userId: string | number) => {
-    const response = await apiClient.delete(`/users/${userId}`);
+    const response = await apiClient.delete(`/system/users/${userId}`);
     return response.data;
   },
   updateUser: async (userId: string | number, payload: { 
@@ -152,7 +152,7 @@ export const GenerateApiKeyService = {
 
 export const ChangePasswordService = {
   resetPassword: async (id: string | number, newPassword: string) => {
-    const response = await apiClient.post(`/users/${id}/reset-password`, {
+    const response = await apiClient.post(`/system/users/${id}/reset-password`, {
       new_password: newPassword 
     });
     return response.data;

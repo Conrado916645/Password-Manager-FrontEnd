@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { UserService } from '../api/services';
 import { Loader2, X, ShieldCheck, Copy, CheckCircle2, ShieldAlert, Lock } from 'lucide-react';
+import { notify} from '../utils/toast';
 
 export default function TOTPMFAModel({ 
   onClose, 
@@ -49,7 +50,7 @@ export default function TOTPMFAModel({
     setIsSubmitting(true);
     try {
       await UserService.verifyMfaSetup(verificationCode);
-      alert("Two-Factor Authentication enabled successfully!");
+      notify.success("Two-Factor Authentication enabled successfully!");
       onSuccess();
     } catch (err: any) {
       setError(err.response?.data?.detail || "Invalid code.");
@@ -64,7 +65,7 @@ export default function TOTPMFAModel({
     setIsSubmitting(true);
     try {
       await UserService.disableMFA(password);
-      alert("Two-Factor Authentication has been disabled.");
+      notify.success("Two-Factor Authentication has been disabled.");
       onSuccess();
     } catch (err: any) {
       setError(err.response?.data?.detail || "Incorrect password.");

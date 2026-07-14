@@ -5,6 +5,7 @@ import {
   UserRegistrationService,
   InstalledAppsService,
 } from "../api/services";
+import { notify } from "../utils/toast";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -28,9 +29,6 @@ export default function Register() {
 
   const [error, setError] = useState<string | null>(null);
 
-  // ======================
-  // LOAD INSTALLED APPS
-  // ======================
   useEffect(() => {
     InstalledAppsService.getInstalledApps()
       .then((res: any) => {
@@ -44,18 +42,12 @@ export default function Register() {
       .finally(() => setLoading(false));
   }, []);
 
-  // ======================
-  // FILTER APPS
-  // ======================
   const filteredApps = useMemo(() => {
     return Object.entries(availableApps).filter(([app]) =>
       app.toLowerCase().includes(search.toLowerCase())
     );
   }, [search, availableApps]);
 
-  // ======================
-  // TOGGLE PERMISSION
-  // ======================
   const togglePermission = (app: string, action: string) => {
     setPermissions((prev) => {
       const current = prev[app] || [];
@@ -74,18 +66,12 @@ export default function Register() {
     });
   };
 
-  // ======================
-  // VALIDATION STATE
-  // ======================
   const isInvalid =
     !formData.username ||
     !formData.password ||
     !formData.confirm_password ||
     formData.password !== formData.confirm_password;
 
-  // ======================
-  // REGISTER HANDLER
-  // ======================
   const handleRegister = async () => {
     setError(null);
 
@@ -106,16 +92,15 @@ export default function Register() {
         confirm_password: formData.confirm_password,
         permissions,
       });
-
+      notify.success("User has been registered.")
       navigate("/users");
     } catch (err: any) {
       setError(err.response?.data?.detail || "Registration failed.");
+      notify.error("Registration failed.")
     }
   };
 
-  // ======================
-  // LOADING STATE
-  // ======================
+
   if (loading)
     return (
       <div className="flex h-screen items-center justify-center bg-slate-50 dark:bg-[#0A0F1D]">

@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { User, Lock, ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
-// Corrected import path pointing directly to services.ts
 import { AuthService } from '../api/services'; 
-// Added missing import for the modal
 import TOTPEntryModal from '../components/TOTPEntryModal'; 
 
 export default function Login() {
@@ -139,8 +137,8 @@ const handleMfaSubmit = async (code: string) => {
 
       {mfaToken && (
         <TOTPEntryModal 
-          onClose={() => setMfaToken(null)} // Cancel login
-          onSuccess={handleMfaSubmit}       // Attempt to verify code
+          onClose={() => setMfaToken(null)} 
+          onSuccess={handleMfaSubmit}    
         />
       )}
 

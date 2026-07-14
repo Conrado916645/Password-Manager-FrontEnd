@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Loader2, X, UserPen } from 'lucide-react';
 import { UserService } from '../api/services';
+import { notify } from "../utils/toast";
 
 export default function EditProfileModal({ 
   user, 
@@ -42,7 +43,7 @@ export default function EditProfileModal({
       };
 
       await UserService.updateProfile(payload);
-      alert("Profile updated successfully!");
+      notify.success("Profile updated successfully!");
       onSuccess(); // Trigger refresh in parent
       onClose();
     } catch (err: any) {

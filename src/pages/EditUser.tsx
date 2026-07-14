@@ -14,17 +14,15 @@ import {
   Key,
   Search,
 } from "lucide-react";
-
-// Import your services. (Assuming you have or will create a general UserService for the other actions)
 import {
   GenerateApiKeyService,
   ChangePasswordService,
   InstalledAppsService,
-  UserService,
   SystemService,
 } from "../api/services";
 
-// 1. Define all possible modal types here to keep Typescript happy as you grow
+import { notify } from "../utils/toast";
+
 type ModalActionType =
   | "password"
   | "permissions"
@@ -40,7 +38,6 @@ export default function EditUser() {
   const location = useLocation();
   const [user, setUser] = useState(location.state?.user || null);
 
-  // UI State
   const [modalType, setModalType] = useState<ModalActionType>(null);
   const [loading, setLoading] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState("");
@@ -115,7 +112,7 @@ export default function EditUser() {
         ]);
 
         setAvailableApps(appsResponse);
-        
+
         // Adjust depending on your API response
         const apps =
           appsResponse?.installed_apps ||
@@ -170,47 +167,38 @@ export default function EditUser() {
 
         case "delete":
           await SystemService.deleteUser(id!);
-          alert("User permanently deleted.");
+          notify.success("User permanently deleted.");
           navigate("/users");
           break;
 
         case "password":
           await ChangePasswordService.resetPassword(user.id, password);
-          alert("Password updated successfully");
+          notify.success("Password updated successfully");
           setModalType(null);
           break;
 
         case "permissions":
           const updatePayload = {
-            is_active: active, 
+            is_active: active,
             permissions: permissions,
           };
           await SystemService.updateUser(user.id, updatePayload);
-          alert("Settings updated successfully");
+          notify.success("Settings updated successfully");
           setModalType(null);
           break;
 
         case "unlock":
           try {
             await SystemService.unlockUser(user.id);
-            alert("Account unlocked successfully.");
+            notify.success("Account unlocked successfully.");
 
-            // Optional: Update the local user state to reflect the change
-            // This removes the "Unlock" button from the UI immediately after success
             setUser((prev: any) => ({ ...prev, locked_until: null }));
 
             setModalType(null);
           } catch (error) {
-            console.error("Failed to unlock user:", error);
-            alert("Could not unlock account. Please try again.");
+            notify.error("Could not unlock account. Please try again.");
           }
           break;
-
-        // Add new cases here easily as your app grows
-        // case 'future_action':
-        //   await UserService.doSomething();
-        //   setModalType(null);
-        //   break;
 
         default:
           console.warn("Unhandled action type:", modalType);
@@ -218,7 +206,7 @@ export default function EditUser() {
       }
     } catch (error) {
       console.error(`Failed to execute ${modalType} action:`, error);
-      alert(`An error occurred while processing the ${modalType} request.`);
+      notify.error(`An error occurred while processing the ${modalType} request.`);
     } finally {
       setLoading(false);
     }
@@ -291,7 +279,7 @@ export default function EditUser() {
             />
             <AuditRow
               label="Deleted"
-              value={user.is_deleted  ? "Yes" : "No"}
+              value={user.is_deleted ? "Yes" : "No"}
               highlight={!!user.is_deleted}
             />
             <hr className="border-slate-100 dark:border-slate-800" />

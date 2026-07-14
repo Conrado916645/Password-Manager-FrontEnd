@@ -18,6 +18,7 @@ import { UserService } from "../api/services";
 import ChangePasswordModal from "../components/ChangePasswordModel";
 import EditProfileModal from "../components/EditProfileModal";
 import TOTPMFAModel from "../components/TOTPMFAModel"; 
+import { notify } from "../utils/toast";
 
 export default function Profile() {
   const [user, setUser] = useState<any>(null);
@@ -49,23 +50,6 @@ export default function Profile() {
     fetchProfile();
   }, []);
 
-  const handleDisable2FA = async () => {
-    if (
-      window.confirm(
-        "Are you sure you want to disable Two-Factor Authentication? This will make your account less secure."
-      )
-    ) {
-      try {
-        // Uncomment and ensure this matches your services.ts when your backend is ready
-        // await UserService.disableMfa();
-        alert("Endpoint disabled successfully! (Make sure to link the API)");
-        await refreshProfile();
-      } catch (error) {
-        console.error("Failed to disable MFA:", error);
-        alert("Failed to disable 2FA. Please try again.");
-      }
-    }
-  };
 
   if (loading) {
     return (
