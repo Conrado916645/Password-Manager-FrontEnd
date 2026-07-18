@@ -1,73 +1,32 @@
-# React + TypeScript + Vite
+# (Frontend Portal)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The unified user interface for the **CommsCheck: Infra-Sentinel** architecture. This frontend provides a secure, intuitive, and highly responsive dashboard for managing infrastructure, handling zero-knowledge encrypted credentials, and administering remote VPN gateways.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Core Features
 
-## React Compiler
+* **Modular Dashboard:** A clean, permission-driven portal granting access to specific system modules (System Admin, Password Vault, VPN Manager) based on user roles.
+* **VPN Manager Interface:** Dedicated UI for creating, tracking, and updating VPN connections, remote gateways, and pre-shared keys.
+* **Zero-Knowledge Vault UI:** Client-side handling of end-to-end encrypted payloads. Passwords and secrets are encrypted within the browser before ever reaching the backend.
+* **Local-First Design:** Optimized for rapid, offline-capable, local network environments without relying on external cloud dependencies.
+* **Responsive & Accessible:** Fully responsive design utilizing modern CSS utility classes for seamless scaling across devices with Light and Dark mode support.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Technology Stack
 
-## Expanding the ESLint configuration
+* **Core Framework:** [React](https://react.dev/) with [TypeScript](https://www.typescriptlang.org/) for strict, type-safe UI components.
+* **Build Tool:** [Vite](https://vitejs.dev/) for lightning-fast Hot Module Replacement (HMR) and optimized production builds.
+* **Styling:** [Tailwind CSS](https://tailwindcss.com/) for utility-first, highly customizable component styling.
+* **Icons:** [Lucide React](https://lucide.dev/) for clean, consistent vector iconography.
+* **Networking:** [Axios](https://axios-http.com/) for streamlined HTTP requests and API interceptor management.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## ⚙️ Local Development Setup
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Follow these steps to configure and run the frontend environment locally.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 1. Clone the Repository
+```bash
+git clone [https://github.com/yourusername/infra-sentinel-frontend.git](https://github.com/yourusername/infra-sentinel-frontend.git)
+cd infra-sentinel-frontend
