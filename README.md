@@ -1,6 +1,6 @@
 # (Frontend Portal)
 
-The unified user interface for the **CommsCheck: Infra-Sentinel** architecture. This frontend provides a secure, intuitive, and highly responsive dashboard for managing infrastructure, handling zero-knowledge encrypted credentials, and administering remote VPN gateways.
+The unified user interface for the architecture. This frontend provides a secure, intuitive, and highly responsive dashboard for managing infrastructure, handling zero-knowledge encrypted credentials, and administering remote VPN gateways.
 
 ---
 
